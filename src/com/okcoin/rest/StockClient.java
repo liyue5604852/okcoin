@@ -20,17 +20,35 @@ public class StockClient {
 	public static void main(String[] args) throws HttpException, IOException{
 		Stock stock = new Stock();
 		
-		String api_key = "54409af6-ece5-423d-86bb-45064abbdf1d";  //OKCoin申请的apiKey
-		String secret_key = "3144FC5897AEE571A116FF8400E55A66";  //OKCoin 申请的secret_key
-		String url_prex = "https://www.okcoin.cn";  //注意：请求URL 国际站https://www.okcoin.com ; 国内站https://www.okcoin.cn
-	    
-	
-	   
+		final long timeInterval = 1000;  
+        Runnable runnable = new Runnable() {  
+            public void run() {  
+                while (true) {  
+            		if("fill".equals(stock.getDealStatus()) && stock.getCurrentPrz() - stock.getLastPrz() > 1){
+            			System.out.println("=====sell=====" + stock.getCurrentPrz());
+            			stock.setDealStatus("empty");
+            			stock.setLastPrz(stock.getCurrentPrz());
+            		}else if("empty".equals(stock.getDealStatus()) && stock.getLastPrz() - stock.getCurrentPrz() > 1){
+            			System.out.println("=====buy=====" + stock.getCurrentPrz());
+            			stock.setDealStatus("fill");
+            			stock.setLastPrz(stock.getCurrentPrz());
+            		}
+            		System.out.println(stock.getCurrentPrz());
+                    try {  
+                        Thread.sleep(timeInterval);  
+                    } catch (InterruptedException e) {  
+                        e.printStackTrace();  
+                    }  
+                }  
+            }  
+        };  
+        Thread thread = new Thread(runnable);  
+        thread.start();
+
 		
-	    
 		
-	    //现货用户信息
-	    System.out.println(stock.getCurrentPrz());
+		
+		
 //		
 //	    //现货下单交易
 //	    String tradeResult = stockPost.trade("btc_usd", "buy", "50", "0.02");
