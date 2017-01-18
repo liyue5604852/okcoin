@@ -18,8 +18,14 @@ public class OrderService extends BaseService{
 	
 	private Order getOrderById(Order order){
 		try {
+			long starTime=System.currentTimeMillis();
 			String returnInfo = stockPost.order_info("btc_cny", order.getOrderId());
+			long endTime=System.currentTimeMillis();
 			System.out.println(returnInfo);
+			long Time=endTime-starTime;
+			System.out.println(starTime);
+			System.out.println(endTime);
+			System.out.println(Time);
 			order = transformOrder(order, returnInfo);
 			
 		} catch (HttpException | IOException e) {

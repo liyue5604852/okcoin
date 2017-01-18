@@ -18,7 +18,7 @@ public class Test {
 		String dealStatus;
 		double currentPrz;
 		
-		if(order.getStatus() == 2){
+		/*if(order.getStatus() == 2){
 			dealPrz = order.getPrice();
 			currentPrz = stock.getCurrentPrz();
 			if("buy".equals(order.getStatus()) && currentPrz - dealPrz > 1){
@@ -30,7 +30,7 @@ public class Test {
     			stock.setDealStatus("fill");
     			stock.setLastPrz(stock.getCurrentPrz());
     		}
-		}
+		}*/
 		
 		
 		
