@@ -1,6 +1,7 @@
 package com.okcoin.rest.service;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.okcoin.rest.bean.Order;
 
 public class OrderService extends BaseService{
+	DecimalFormat df = new DecimalFormat("######0.00");
+	
 	/**
 	 * 更新订单
 	 * @param Order
@@ -27,10 +30,10 @@ public class OrderService extends BaseService{
 	 * @param amount
 	 * @return order_id
 	 */
-	public String buy(String prz ,String amount){
+	public String buy(double prz ,double amount){
 		String orderId = null;
 		try {
-			String returnInfo = stockPost.trade("btc_cny", "buy", prz, amount);
+			String returnInfo = stockPost.trade("btc_cny", "buy", df.format(prz), Double.toString(amount));
 			Map<String, Object> returnMap = transformTrade(returnInfo);
 			orderId = returnMap.get("orderId").toString();
 		} catch (HttpException | IOException e) {
@@ -39,10 +42,10 @@ public class OrderService extends BaseService{
 		}
 		return orderId;
 	}
-	public String sell(String prz ,String amount){
+	public String sell(double prz ,double amount){
 		String orderId = null;
 		try {
-			String returnInfo = stockPost.trade("btc_cny", "sell", prz, amount);
+			String returnInfo = stockPost.trade("btc_cny", "sell", df.format(prz), Double.toString(amount));
 			Map<String, Object> returnMap = transformTrade(returnInfo);
 			orderId = returnMap.get("orderId").toString();
 		} catch (HttpException | IOException e) {
@@ -69,10 +72,10 @@ public class OrderService extends BaseService{
 			String returnInfo = stockPost.order_info("btc_cny", order.getOrderId());
 			long endTime=System.currentTimeMillis();
 //			System.out.println(returnInfo);
-			long Time=endTime-starTime;
+			long time=endTime-starTime;
 //			System.out.println(starTime);
 //			System.out.println(endTime);
-//			System.out.println(Time);
+//			System.out.println(time);
 			order = transformOrder(order, returnInfo);
 			
 		} catch (HttpException | IOException e) {
@@ -83,18 +86,23 @@ public class OrderService extends BaseService{
 	}
 	
 	private Order transformOrder(Order order, String jsonMsg){
-		JSONObject jsonMsgObj = JSON.parseObject(jsonMsg);
-		JSONArray ordersObj = jsonMsgObj.getJSONArray("orders");
-		JSONObject orderObj = ordersObj.getJSONObject(0);
-		int status = orderObj.getIntValue("status");
-		double price = orderObj.getDoubleValue("price");
-		String type = orderObj.getString("type");
-		String orderId = orderObj.getString("order_id");
-		System.out.println(orderId);
-		order.setStatus(status);
-		order.setPrice(price);
-		order.setType(type);
-		order.setOrderId(orderId);
+		try{
+			JSONObject jsonMsgObj = JSON.parseObject(jsonMsg);
+			JSONArray ordersObj = jsonMsgObj.getJSONArray("orders");
+			JSONObject orderObj = ordersObj.getJSONObject(0);
+			int status = orderObj.getIntValue("status");
+			double price = orderObj.getDoubleValue("price");
+			String type = orderObj.getString("type");
+			String orderId = orderObj.getString("order_id");
+//			System.out.println(orderId);
+			order.setStatus(status);
+			order.setPrice(price);
+			order.setType(type);
+			order.setOrderId(orderId);
+		}catch(Exception e){
+			System.out.println(jsonMsg);
+		}
+		
 		return order;
 	}
 	

@@ -7,15 +7,29 @@ import com.okcoin.rest.service.OrderService;
 import com.okcoin.rest.service.StockService;
 
 public class Test {
-	Order order = new Order();
 
 	public static void main(String[] args) {
-		/*DealLogic logic = DealLogic.getInstance();
+		DealLogic logic = DealLogic.getInstance();
 		logic.init();
-		logic.start();*/
+		final long timeInterval = 1400;  
+		Runnable runnable = new Runnable() {  
+            public void run() {  
+                while (true) {
+                	logic.start();
+                	try {  
+                        Thread.sleep(timeInterval);  
+                    } catch (InterruptedException e) {  
+                        e.printStackTrace();  
+                    }  
+                }  
+            }  
+        };  
+        Thread thread = new Thread(runnable);  
+        thread.start();
+
 		
-		StockService service = new StockService();
-		System.out.println("end=====" + service.getCurrentPrz());
+		/*StockService service = new StockService();
+		System.out.println("end=====" + service.getCurrentPrz());*/
 		
 		/*Stock stock = new Stock();
 		
