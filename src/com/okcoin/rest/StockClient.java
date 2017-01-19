@@ -24,7 +24,7 @@ public class StockClient {
         Runnable runnable = new Runnable() {  
             public void run() {  
                 while (true) {  
-            		if("fill".equals(stock.getDealStatus()) && stock.getCurrentPrz() - stock.getLastPrz() > 1){
+            		/*if("fill".equals(stock.getDealStatus()) && stock.getCurrentPrz() - stock.getLastPrz() > 1){
             			System.out.println("=====sell=====" + stock.getCurrentPrz());
             			stock.setDealStatus("empty");
             			stock.setLastPrz(stock.getCurrentPrz());
@@ -33,7 +33,7 @@ public class StockClient {
             			stock.setDealStatus("fill");
             			stock.setLastPrz(stock.getCurrentPrz());
             		}
-            		System.out.println(stock.getCurrentPrz());
+            		System.out.println(stock.getCurrentPrz());*/
                     try {  
                         Thread.sleep(timeInterval);  
                     } catch (InterruptedException e) {  

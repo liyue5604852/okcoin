@@ -2,23 +2,28 @@ package com.okcoin.rest;
 
 import com.okcoin.rest.bean.Order;
 import com.okcoin.rest.bean.Stock;
+import com.okcoin.rest.service.DealLogic;
 import com.okcoin.rest.service.OrderService;
+import com.okcoin.rest.service.StockService;
 
 public class Test {
+	Order order = new Order();
 
 	public static void main(String[] args) {
-		OrderService service = new OrderService();
-		Order order = new Order();
-		order.setOrderId("-1");
-		order = service.refreshOrder(order);
+		/*DealLogic logic = DealLogic.getInstance();
+		logic.init();
+		logic.start();*/
 		
-		Stock stock = new Stock();
+		StockService service = new StockService();
+		System.out.println("end=====" + service.getCurrentPrz());
+		
+		/*Stock stock = new Stock();
 		
 		double dealPrz;
 		String dealStatus;
 		double currentPrz;
 		
-		/*if(order.getStatus() == 2){
+		if(order.getStatus() == 2){
 			dealPrz = order.getPrice();
 			currentPrz = stock.getCurrentPrz();
 			if("buy".equals(order.getStatus()) && currentPrz - dealPrz > 1){
