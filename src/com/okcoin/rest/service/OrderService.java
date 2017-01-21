@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpException;
+import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -13,6 +14,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.okcoin.rest.bean.Order;
 
 public class OrderService extends BaseService{
+	private static Logger logger = Logger.getLogger(OrderService.class);
+	
 	DecimalFormat df = new DecimalFormat("######0.00");
 	
 	/**
@@ -28,7 +31,7 @@ public class OrderService extends BaseService{
 	 * 买入
 	 * @param prz
 	 * @param amount
-	 * @return order_id
+	 * @return Order ID
 	 */
 	public String buy(double prz ,double amount){
 		String orderId = null;
@@ -37,11 +40,18 @@ public class OrderService extends BaseService{
 			Map<String, Object> returnMap = transformTrade(returnInfo);
 			orderId = returnMap.get("orderId").toString();
 		} catch (HttpException | IOException e) {
-			// TODO Auto-generated catch block
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 		return orderId;
 	}
+	
+	/**
+	 * 卖出
+	 * @param prz
+	 * @param amount
+	 * @return Order ID
+	 */
 	public String sell(double prz ,double amount){
 		String orderId = null;
 		try {
@@ -71,15 +81,11 @@ public class OrderService extends BaseService{
 			long starTime=System.currentTimeMillis();
 			String returnInfo = stockPost.order_info("btc_cny", order.getOrderId());
 			long endTime=System.currentTimeMillis();
-//			System.out.println(returnInfo);
 			long time=endTime-starTime;
-//			System.out.println(starTime);
-//			System.out.println(endTime);
-//			System.out.println(time);
 			order = transformOrder(order, returnInfo);
 			
 		} catch (HttpException | IOException e) {
-			// TODO Auto-generated catch block
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return order;
@@ -100,7 +106,9 @@ public class OrderService extends BaseService{
 			order.setType(type);
 			order.setOrderId(orderId);
 		}catch(Exception e){
+			logger.error(e);
 			System.out.println(jsonMsg);
+			logger.error(jsonMsg);
 		}
 		
 		return order;
